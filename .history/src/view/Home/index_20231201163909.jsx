@@ -89,7 +89,7 @@ const Home = () => {
     setCurrentTime(item);
   };
   const addToggle = () => {
-    addRef.current && addRef.current.show();
+    // do something
   };
 
   return (

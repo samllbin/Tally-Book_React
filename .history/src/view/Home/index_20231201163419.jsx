@@ -8,7 +8,6 @@ import BillItem from '@/components/BillItem';
 import PopupType from '@/components/PopupType';
 import PopupDate from '@/components/PopupDate';
 import CustomIcon from '@/components/CustomIcon';
-import PopupAddBill from '@/components/PopupAddBill';
 const Home = () => {
   const [currentTime, setCurrentTime] = useState(dayjs().format('YYYY-MM')); // 当前筛选时间
   const [page, setPage] = useState(1); // 分页
@@ -22,8 +21,6 @@ const Home = () => {
 
   const typeRef = useRef(null);
   const dateRef = useRef(null);
-  const addRef = useRef(null);
-
   const [currentSelect, setCurrentSelect] = useState({});
 
   useEffect(() => {
@@ -89,7 +86,7 @@ const Home = () => {
     setCurrentTime(item);
   };
   const addToggle = () => {
-    addRef.current && addRef.current.show();
+    // do something
   };
 
   return (
@@ -163,7 +160,6 @@ const Home = () => {
       </div>
       <PopupType ref={typeRef} onselect={select} />
       <PopupDate ref={dateRef} mode="month" onSelect={selectMonth} />
-      <PopupAddBill ref={addRef}></PopupAddBill>
     </div>
   );
 };

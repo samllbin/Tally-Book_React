@@ -22,8 +22,6 @@ const Home = () => {
 
   const typeRef = useRef(null);
   const dateRef = useRef(null);
-  const addRef = useRef(null);
-
   const [currentSelect, setCurrentSelect] = useState({});
 
   useEffect(() => {
@@ -89,7 +87,7 @@ const Home = () => {
     setCurrentTime(item);
   };
   const addToggle = () => {
-    addRef.current && addRef.current.show();
+    // do something
   };
 
   return (
@@ -163,7 +161,6 @@ const Home = () => {
       </div>
       <PopupType ref={typeRef} onselect={select} />
       <PopupDate ref={dateRef} mode="month" onSelect={selectMonth} />
-      <PopupAddBill ref={addRef}></PopupAddBill>
     </div>
   );
 };
