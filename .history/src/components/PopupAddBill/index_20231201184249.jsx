@@ -1,5 +1,5 @@
 import React, { forwardRef, useState, useRef, useEffect } from 'react';
-import { Popup, Keyboard, Input, Toast } from 'zarm';
+import { Popup, Keyboard, Input } from 'zarm';
 import cx from 'classnames';
 import CustomIcon from '../CustomIcon';
 

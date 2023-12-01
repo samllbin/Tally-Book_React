@@ -1,12 +1,12 @@
 import React, { forwardRef, useState, useRef, useEffect } from 'react';
-import { Popup, Keyboard, Input, Toast } from 'zarm';
+import { Popup, Keyboard, Input } from 'zarm';
 import cx from 'classnames';
 import CustomIcon from '../CustomIcon';
 
 import s from './style.module.less';
 import dayjs from 'dayjs';
 import PopupDate from '../PopupDate';
-import { get, typeMap, post } from '@/utils';
+import { get, typeMap } from '@/utils';
 
 const PopupAddBill = forwardRef((props, ref) => {
   const [show, setShow] = useState(false);
@@ -80,7 +80,7 @@ const PopupAddBill = forwardRef((props, ref) => {
       amount: Number(amount).toFixed(2), // 账单金额小数点后保留两位
       type_id: currentType.id, // 账单种类id
       type_name: currentType.name, // 账单种类名称
-      date: dayjs(time).unix() * 1000, // 日期传时间戳
+      date: dayjs(date).unix() * 1000, // 日期传时间戳
       pay_type: payType == 'expense' ? 1 : 2, // 账单类型传 1 或 2
       remark: remark || '', // 备注
     };
@@ -88,11 +88,12 @@ const PopupAddBill = forwardRef((props, ref) => {
     // 重制数据
     setAmount('');
     setPayType('expense');
-    setCurrentType(expenseType[0]);
-    setTime(new Date());
+    setCurrentType(expense[0]);
+    setDate(new Date());
     setRemark('');
     Toast.show('添加成功');
     setShow(false);
+    if (props.onReload) props.onReload();
   };
 
   return (

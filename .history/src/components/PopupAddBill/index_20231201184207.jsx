@@ -1,5 +1,5 @@
 import React, { forwardRef, useState, useRef, useEffect } from 'react';
-import { Popup, Keyboard, Input, Toast } from 'zarm';
+import { Popup, Keyboard, Input } from 'zarm';
 import cx from 'classnames';
 import CustomIcon from '../CustomIcon';
 
@@ -89,7 +89,7 @@ const PopupAddBill = forwardRef((props, ref) => {
     setAmount('');
     setPayType('expense');
     setCurrentType(expenseType[0]);
-    setTime(new Date());
+    setDate(new Time());
     setRemark('');
     Toast.show('添加成功');
     setShow(false);
