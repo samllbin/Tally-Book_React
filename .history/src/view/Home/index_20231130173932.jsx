@@ -117,7 +117,7 @@ const Home = () => {
           </Pull>
         ) : null}
       </div>
-      <PopupType ref={typeRef} onselect={select}></PopupType>
+      <PopupType ref={typeRef} onSelect={select}></PopupType>
     </div>
   );
 };

@@ -5,7 +5,6 @@ import dayjs from 'dayjs';
 import { get, REFRESH_STATE, LOAD_STATE } from '@/utils';
 
 import BillItem from '@/components/BillItem';
-import PopupType from '@/components/PopupType';
 const Home = () => {
   const [currentTime, setCurrentTime] = useState(dayjs().format('YYYY-MM')); // 当前筛选时间
   const [page, setPage] = useState(1); // 分页
@@ -15,18 +14,15 @@ const Home = () => {
   const [loading, setLoading] = useState(LOAD_STATE.normal); // 上拉加载状态
 
   const typeRef = useRef(null);
-  const [currentSelect, setCurrentSelect] = useState({});
 
   useEffect(() => {
     getBillList(); // 初始化
-  }, [page, currentSelect]);
+  }, [page]);
 
   // 获取账单方法
   const getBillList = async () => {
     const { data } = await get(
-      `/api/bill/list?page=${page}&page_size=5&date=${currentTime}&type_id=${
-        currentSelect.id || 'all'
-      }`,
+      `/api/bill/list?page=${page}&page_size=5&date=${currentTime}`,
     );
     // 下拉刷新，重制数据
     if (page == 1) {
@@ -57,18 +53,6 @@ const Home = () => {
     }
   };
 
-  // 添加账单弹窗
-  const toggle = () => {
-    typeRef.current && typeRef.current.show();
-  };
-
-  const select = item => {
-    setRefreshing(REFRESH_STATE.loading);
-    // 触发刷新列表，将分页重制为 1
-    setPage(1);
-    setCurrentSelect(item);
-  };
-
   return (
     <div className={s.home}>
       <div className={s.head}>
@@ -81,10 +65,9 @@ const Home = () => {
           </span>
         </div>
         <div className={s.type}>
-          <div className={s.left} onClick={toggle}>
+          <div className={s.left}>
             <span className={s.payType}>
-              {currentSelect.name || '全部类型'}
-              <ion-icon name="chevron-down-outline" />
+              类型 <ion-icon name="chevron-down-outline" />
             </span>
           </div>
           <div className={s.right}>
@@ -117,7 +100,6 @@ const Home = () => {
           </Pull>
         ) : null}
       </div>
-      <PopupType ref={typeRef} onselect={select}></PopupType>
     </div>
   );
 };

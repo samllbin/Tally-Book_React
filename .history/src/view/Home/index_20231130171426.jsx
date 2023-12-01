@@ -5,7 +5,6 @@ import dayjs from 'dayjs';
 import { get, REFRESH_STATE, LOAD_STATE } from '@/utils';
 
 import BillItem from '@/components/BillItem';
-import PopupType from '@/components/PopupType';
 const Home = () => {
   const [currentTime, setCurrentTime] = useState(dayjs().format('YYYY-MM')); // 当前筛选时间
   const [page, setPage] = useState(1); // 分页
@@ -62,6 +61,7 @@ const Home = () => {
     typeRef.current && typeRef.current.show();
   };
 
+  // 筛选类型
   const select = item => {
     setRefreshing(REFRESH_STATE.loading);
     // 触发刷新列表，将分页重制为 1
@@ -81,10 +81,9 @@ const Home = () => {
           </span>
         </div>
         <div className={s.type}>
-          <div className={s.left} onClick={toggle}>
+          <div className={s.left}>
             <span className={s.payType}>
-              {currentSelect.name || '全部类型'}
-              <ion-icon name="chevron-down-outline" />
+              类型 <ion-icon name="chevron-down-outline" />
             </span>
           </div>
           <div className={s.right}>
@@ -117,7 +116,6 @@ const Home = () => {
           </Pull>
         ) : null}
       </div>
-      <PopupType ref={typeRef} onselect={select}></PopupType>
     </div>
   );
 };
