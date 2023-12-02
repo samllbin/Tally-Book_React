@@ -83,7 +83,7 @@ const Data = () => {
             radius: '55%',
             data: data.map(item => {
               return {
-                value: item.totalNumber,
+                value: item.number,
                 name: item.type_name,
               };
             }),
@@ -97,6 +97,7 @@ const Data = () => {
           },
         ],
       });
+      console.log(proportionChart);
     }
   };
   return (

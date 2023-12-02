@@ -66,7 +66,7 @@ const Data = () => {
   const setPieChart = data => {
     if (window.echarts) {
       proportionChart = echarts.init(document.getElementById('proportion'));
-
+      console.log(proportionChart);
       proportionChart.setOption({
         tooltip: {
           trigger: 'item',
@@ -83,7 +83,7 @@ const Data = () => {
             radius: '55%',
             data: data.map(item => {
               return {
-                value: item.totalNumber,
+                value: item.number,
                 name: item.type_name,
               };
             }),

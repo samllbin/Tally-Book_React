@@ -44,17 +44,14 @@ const Data = () => {
       .sort((a, b) => b.number - a.number); // 过滤出账单类型为收入的项
     setExpenseData(expense_data);
     setIncomeData(income_data);
-
     setPieChart(pieType == 'expense' ? expense_data : income_data);
   };
   // 切换饼图收支类型
   const changePieType = type => {
     setPieType(type);
-  };
-  useEffect(() => {
     // 重绘饼图
-    setPieChart(pieType == 'expense' ? expenseData : incomeData);
-  }, [pieType]);
+    setPieChart(type == 'expense' ? expenseData : incomeData);
+  };
 
   const controlDate = () => {
     dateRef.current && dateRef.current.show();
@@ -62,11 +59,10 @@ const Data = () => {
   const choseMonth = item => {
     setCurrentDate(item);
   };
-
   const setPieChart = data => {
     if (window.echarts) {
+      // 初始化饼图，返回实例。
       proportionChart = echarts.init(document.getElementById('proportion'));
-
       proportionChart.setOption({
         tooltip: {
           trigger: 'item',
@@ -83,7 +79,7 @@ const Data = () => {
             radius: '55%',
             data: data.map(item => {
               return {
-                value: item.totalNumber,
+                value: item.number,
                 name: item.type_name,
               };
             }),
@@ -107,8 +103,8 @@ const Data = () => {
           <Icon className={s.date} type="date" />
         </div>
         <div className={s.title}>共支出</div>
-        <div className={s.expense}>¥{totalExpense}</div>
-        <div className={s.income}>共收入¥{totalIncome}</div>
+        <div className={s.expense}>¥1000</div>
+        <div className={s.income}>共收入¥200</div>
       </div>
       <div className={s.structure}>
         <div className={s.head}>
@@ -173,32 +169,6 @@ const Data = () => {
               </div>
             </div>
           ))}
-        </div>
-        <div className={s.proportion}>
-          <div className={s.head}>
-            <span className={s.title}>收支构成</span>
-            <div className={s.tab}>
-              <span
-                onClick={() => changePieType('expense')}
-                className={cx({
-                  [s.expense]: true,
-                  [s.active]: pieType == 'expense',
-                })}
-              >
-                支出
-              </span>
-              <span
-                onClick={() => changePieType('income')}
-                className={cx({
-                  [s.income]: true,
-                  [s.active]: pieType == 'income',
-                })}
-              >
-                收入
-              </span>
-            </div>
-          </div>
-          <div id="proportion"></div>
         </div>
       </div>
       <PopupDate ref={dateRef} mode="month" onSelect={choseMonth} />

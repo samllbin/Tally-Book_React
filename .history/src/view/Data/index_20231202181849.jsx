@@ -44,7 +44,6 @@ const Data = () => {
       .sort((a, b) => b.number - a.number); // 过滤出账单类型为收入的项
     setExpenseData(expense_data);
     setIncomeData(income_data);
-
     setPieChart(pieType == 'expense' ? expense_data : income_data);
   };
   // 切换饼图收支类型
@@ -62,11 +61,9 @@ const Data = () => {
   const choseMonth = item => {
     setCurrentDate(item);
   };
-
   const setPieChart = data => {
     if (window.echarts) {
       proportionChart = echarts.init(document.getElementById('proportion'));
-
       proportionChart.setOption({
         tooltip: {
           trigger: 'item',
@@ -83,7 +80,7 @@ const Data = () => {
             radius: '55%',
             data: data.map(item => {
               return {
-                value: item.totalNumber,
+                value: item.number,
                 name: item.type_name,
               };
             }),

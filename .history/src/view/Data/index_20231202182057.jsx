@@ -7,16 +7,16 @@ import CustomIcon from '@/components/CustomIcon';
 import PopupDate from '@/components/PopupDate';
 import s from './style.module.less';
 
-let proportionChart = null; // 用于存放 echart 初始化返回的实例
-const Data = () => {
-  const dateRef = useRef();
+let proportionChart = null;
 
-  const [totalType, setTotalType] = useState('expense'); // 收入或支出类型
-  const [totalExpense, setTotalExpense] = useState(0); // 总支出
-  const [totalIncome, setTotalIncome] = useState(0); // 总收入
-  const [expenseData, setExpenseData] = useState([]); // 支出数据
-  const [incomeData, setIncomeData] = useState([]); // 收入数据
-  const [currentDate, setCurrentDate] = useState(dayjs().format('YYYY-MM'));
+const Data = () => {
+  const monthRef = useRef();
+  const [totalType, setTotalType] = useState('expense');
+  const [currentMonth, setCurrentMonth] = useState(dayjs().format('YYYY-MM'));
+  const [totalExpense, setTotalExpense] = useState(0);
+  const [totalIncome, setTotalIncome] = useState(0);
+  const [expenseData, setExpenseData] = useState([]);
+  const [incomeData, setIncomeData] = useState([]);
   const [pieType, setPieType] = useState('expense');
 
   useEffect(() => {
@@ -25,11 +25,10 @@ const Data = () => {
       // 每次组件卸载的时候，需要释放图表实例。clear 只是将其清空不会释放。
       proportionChart.dispose();
     };
-  }, [currentDate]);
+  }, [currentMonth]);
 
-  // 获取数据详情
   const getData = async () => {
-    const { data } = await get(`/api/bill/data?date=${currentDate}`);
+    const { data } = await get(`/api/bill/data?date=${currentMonth}`);
 
     // 总收支
     setTotalExpense(data.total_expense);
@@ -44,29 +43,25 @@ const Data = () => {
       .sort((a, b) => b.number - a.number); // 过滤出账单类型为收入的项
     setExpenseData(expense_data);
     setIncomeData(income_data);
-
     setPieChart(pieType == 'expense' ? expense_data : income_data);
   };
+
+  // 切换收支构成类型
+  const changeTotalType = type => {
+    setTotalType(type);
+  };
+
   // 切换饼图收支类型
   const changePieType = type => {
     setPieType(type);
-  };
-  useEffect(() => {
     // 重绘饼图
-    setPieChart(pieType == 'expense' ? expenseData : incomeData);
-  }, [pieType]);
-
-  const controlDate = () => {
-    dateRef.current && dateRef.current.show();
-  };
-  const choseMonth = item => {
-    setCurrentDate(item);
+    setPieChart(type == 'expense' ? expenseData : incomeData);
   };
 
+  // 绘制饼图方法
   const setPieChart = data => {
     if (window.echarts) {
       proportionChart = echarts.init(document.getElementById('proportion'));
-
       proportionChart.setOption({
         tooltip: {
           trigger: 'item',
@@ -83,7 +78,7 @@ const Data = () => {
             radius: '55%',
             data: data.map(item => {
               return {
-                value: item.totalNumber,
+                value: item.number,
                 name: item.type_name,
               };
             }),
@@ -99,11 +94,21 @@ const Data = () => {
       });
     }
   };
+
+  // 月份弹窗开关
+  const monthShow = () => {
+    monthRef.current && monthRef.current.show();
+  };
+
+  const selectMonth = item => {
+    setCurrentMonth(item);
+  };
+
   return (
     <div className={s.data}>
       <div className={s.total}>
-        <div className={s.time} onClick={controlDate}>
-          <span>{currentDate}</span>
+        <div className={s.time} onClick={monthShow}>
+          <span>{currentMonth}</span>
           <Icon className={s.date} type="date" />
         </div>
         <div className={s.title}>共支出</div>
@@ -112,10 +117,10 @@ const Data = () => {
       </div>
       <div className={s.structure}>
         <div className={s.head}>
-          <span className={s.title}>收支详情</span>
+          <span className={s.title}>收支构成</span>
           <div className={s.tab}>
             <span
-              onClick={() => setTotalType('expense')}
+              onClick={() => changeTotalType('expense')}
               className={cx({
                 [s.expense]: true,
                 [s.active]: totalType == 'expense',
@@ -124,7 +129,7 @@ const Data = () => {
               支出
             </span>
             <span
-              onClick={() => setTotalType('income')}
+              onClick={() => changeTotalType('income')}
               className={cx({
                 [s.income]: true,
                 [s.active]: totalType == 'income',
@@ -152,8 +157,7 @@ const Data = () => {
                   <span className={s.name}>{item.type_name}</span>
                 </div>
                 <div className={s.progress}>
-                  <span className="icon">￥</span>
-                  {Number(item.totalNumber).toFixed(2) || 0}
+                  ¥{Number(item.number).toFixed(2) || 0}
                 </div>
               </div>
               <div className={s.right}>
@@ -161,7 +165,7 @@ const Data = () => {
                   <Progress
                     shape="line"
                     percent={Number(
-                      (item.totalNumber /
+                      (item.number /
                         Number(
                           totalType == 'expense' ? totalExpense : totalIncome,
                         )) *
@@ -201,7 +205,7 @@ const Data = () => {
           <div id="proportion"></div>
         </div>
       </div>
-      <PopupDate ref={dateRef} mode="month" onSelect={choseMonth} />
+      <PopupDate ref={monthRef} mode="month" onSelect={selectMonth} />
     </div>
   );
 };
